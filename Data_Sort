@@ -1,0 +1,109 @@
+import java.util.LinkedList;
+import java.util.Scanner;
+
+public class Data <T> {
+    private T t;
+    private String n;
+    Data (T t, String n){
+        this.t = t;
+        this.n = n;
+    }
+
+    public T getT() {
+        return t;
+    }
+
+    public String getN() {
+        return n;
+    }
+
+    public void setT(T t) {
+        this.t = t;
+    }
+
+    public void setN(String n) {
+        this.n = n;
+    }
+
+    void print(){
+        System.out.println(n + " - " + t);
+    }
+}
+
+public class Main {
+    public static void main(String[] args){
+
+        //LIST
+        LinkedList<Data> list = new LinkedList<>();
+
+        //INPUT
+        String action = " ";
+        while (!action.equals("end")) {
+            Scanner scanner1 = new Scanner(System.in);
+            Scanner scanner2 = new Scanner(System.in);
+            action = scanner1.nextLine();
+            if (action.equals("")) {
+                break;
+            }
+            try {
+                switch (action) {
+                    case "string":
+                        String dataString = scanner1.nextLine();
+                        list.add(new Data(dataString, "String"));
+                        break;
+                    case "int":
+                        int dataInt = scanner2.nextInt();
+                        list.add(new Data(dataInt, "Int"));
+                        break;
+                    default:
+                        System.out.println("Invalid type");
+                        break;
+                }
+            }
+            catch (Exception InputMismatchException){
+                System.out.println("Invalid input");
+            }
+        }
+
+        //SEPARATION
+        Data[] reserve = new Data[1];
+        int a = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getN().equals("Int")) {
+                reserve[0] = list.get(a);
+                list.set(a, list.get(i));
+                list.set(i, reserve[0]);
+                a++;
+            }
+        }
+
+        //SORT_1 (int)
+        for (int i = 0; i < a; i++) {
+            for (int j = 1; j < a - i; j++) {
+                if ((int) list.get(j - 1).getT() > (int) list.get(j).getT()) {
+                    reserve[0] = list.get(j - 1);
+                    list.set(j - 1, list.get(j));
+                    list.set(j, reserve[0]);
+                }
+            }
+        }
+
+        //SORT_2 (String)
+        for (int i = a; i < list.size() - 1; i++) {
+            for (int j = i + 1; j < list.size(); j++) {
+                String temp1 = (String) list.get(i).getT();
+                String temp2 = (String) list.get(j).getT();
+                if (temp1.compareTo(temp2) > 0) {
+                    reserve[0] = list.get(i);
+                    list.set(i, list.get(j));
+                    list.set(j, reserve[0]);
+                }
+            }
+        }
+
+        //OUTPUT
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).print();
+        }
+    }
+}
